@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jonathan Marchini research">
+    <meta name="author" content="Jonathan Marchini">
+    <link rel="canonical" href="https://sourcefoundry.org/cinder/bgenie/">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>Bgenie - jmarchini</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">jmarchini</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../pubs/">Publications</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../projects/">Projects</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../software/">Software</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../people/">People</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../teaching/">Teaching</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../news/">News</a>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#overview">Overview</a></li>
+        <li class="first-level "><a href="#basic-usage">Basic Usage:</a></li>
+        <li class="first-level "><a href="#full-options-list">Full options list</a></li>
+            <li class="second-level"><a href="#input-options">Input options</a></li>
+                
+            <li class="second-level"><a href="#output-file-options">Output file options</a></li>
+                
+            <li class="second-level"><a href="#filtering-options">Filtering options</a></li>
+                
+            <li class="second-level"><a href="#runtime-options">Runtime options</a></li>
+                
+            <li class="second-level"><a href="#phenotype-and-genotype-transformations">Phenotype and genotype transformations</a></li>
+                
+            <li class="second-level"><a href="#miscellaneous">Miscellaneous</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h2 id="overview">Overview</h2>
+<p>A program for efficient GWAS for multiple continuous traits and PHEWAS with many features designed and optimized for large scale analysis:</p>
+<ul>
+<li>BGENIE is built upon the <a href="https://enkre.net/cgi-bin/code/bgen/dir?ci=trunk">BGEN</a> library. It takes BGEN files as input and avoids repeated decompression and conversion of these files when analyzing multiple continuous phenotypes.</li>
+<li>It was written for the analysis of the UK Biobank dataset (which is stored in the  <a href="https://www.well.ox.ac.uk/~gav/bgen_format/">BGEN v1.2 file format</a>). This dataset consists of genetic data on ~500,000 individuals, ~93 Million autosomal variants and thousands of phenotypes.</li>
+<li>It works with indexed BGEN files yielding fast access for any (group of) SNPs. This feature facilitates very fast PHEWAS.</li>
+<li>BGENIE uses the Eigen matrix library and OpenMP to carry out as many of the linear algebra operations in parallel as possible. For example, estimation of effect sizes of large numbers of SNPs can be carried out in parallel using matrix operations, and indexing of missing data values is used to allow for fast estimation of standard errors.</li>
+<li>It has built in functionality to apply PCA or ICA (using the fastICA algorithm) to multiple phenotypes and use the resulting transformed phenotypes for testing via GWAS.</li>
+</ul>
+<h2 id="basic-usage">Basic Usage:</h2>
+<p>BGENIE performs a linear association test between SNP/phenotype pairs in the provided data. A basic command to run GWAS on all the phenotypes is:</p>
+<pre><code>bgenie --bgen example.bgen --pheno example.pheno --out example.out
+</code></pre>
+<p>If you wish to specify a range of SNPs specified by position (useful if you wish to split the genome up into multiple jobs) you can use the –range option, for example:</p>
+<pre><code>bgenie --bgen example.bgen --pheno example.pheno --out example.out --range 22 20000000 21000000
+</code></pre>
+<p>If you wish to analyse just a single SNP you can select it using the –rsid option, for example:</p>
+<pre><code>bgenie --bgen example.bgen --pheno example.pheno --out example.out --rsid rs573069994
+</code></pre>
+<h2 id="full-options-list">Full options list</h2>
+<h3 id="input-options">Input options</h3>
+<p><strong>--bgen &lt;file.bgen></strong> (Required) The BGEN file containing the genetic data for the subjects in the analysis must be specified by the file <file.bgen>. It helps to have the BGEN file indexed (i.e produce a BGI file), which allows efficient PHEWAS and ranged based operations. See tools QCTOOL and BGENIX for more information about these sorts of files.</p>
+<p><strong>--pheno &lt;file.pheno></strong> (Required) The phenotypes for the subjects in the study must be specified by the file <file.pheno> . This must be a space separated file, wherein the first line is a header line specifying the names of each phenotype as a space separated list, and the remaining lines specifying the values of the phenotypes for each subject. The subjects must be presented in the same order that they are found in the BGEN file. If a SAMPLE file has been provided to accompany the BGEN files, then this order can be found by examining the SAMPLE file. Alternatively, if the subject IDs are present in the BGEN file, then they can be found using the qctool software, with the command qctool -g example.bgen -os example.sample (in some datasets, such as UK BIOBANK, the subject IDs are stripped from the BGEN files, in which case an accompanying SAMPLE file must be relied upon). Missing values must be encoded by the code -999, or the code specified by the argument to the --miss parameter. An example phenotype file is provided in the following listing:</p>
+<p>Height(in)  Weight(lbs)<br />
+58 115<br />
+59 117<br />
+60 120 <br />
+61 123<br />
+62 -999  </p>
+<p>In this example phenotype file, the height and weight are given for 5 subjects, and the 5-th subject has a missing weight measurement.</p>
+<p><strong>--covar &lt;file.cov></strong> Specifies that covariates to be removed from the analysis are read from the file file.cov. The format of this file is the same as that for the phenotype file: it is space separated and the first line is a header specifying the names of the covariates. The remaining lines specify the values of the covariates for the subjects (the subjects must be ordered in the same order as they are given in the phenotype file). As for the phenotype file, the code -999 must be used to specify missing covariates (this code can be modified by using the --miss parameter).</p>
+<p>Covariates are removed by replacing each phenotype by the residuals found after a multilinear regression between the phenotype and all of the covariates (with the intercept fit). Each subject with at least one missing covariate will be dropped from the analysis.</p>
+<p><strong>--miss &lt;int></strong> This option can be used to change the code for missing values in the phenotype file file.pheno and covariate file file.cov to the integer value of int. The default value of is -999.</p>
+<h3 id="output-file-options">Output file options</h3>
+<p><strong>--out &lt;file.out></strong> (Required argument.) This parameter specifies the output file. The results of the analysis will be saved in the file file.out.gz, with gzip compression. This is a compressed space separated file. The first line of the output file is a header giving the column names for each column in the file. The first 7 columns provide information about the SNP. These columns are as follows:</p>
+<p>The chromosome on which the SNP resides.<br />
+The name of the SNP (rsid).<br />
+The position of the SNP.<br />
+The character code for the first allele (a string).<br />
+The character code for the second allele (a string).<br />
+The allele frequency of the second allele (if the second allele is the minor allele, this is the MAF).<br />
+The information score of the SNP (the quality of imputation).  </p>
+<p>For the remaining columns, the results of the linear association test are provided in groups of three columns per phenotype. In these remaining columns, the beta coefficient, standard error and t-statistic for the linear association are provided.</p>
+<p>In the regression model we code the first and second alleles as 0 and 1 respectively, so the beta coefficient refers to the effect of having an extra copy of the second allele.</p>
+<p>An example of the first 10 columns of an uncompressed ouput file are provided in the following listing:</p>
+<p>chr rsid pos a_0 a_1 af info pheno1_beta pheno1_se pheno1_t ...<br />
+22 22:16050075:A:G 16050075 A G 0.0001 1 0.00067749 0.01008 0.067215 ...<br />
+22 22:16050115:G:A 16050115 G A 0.00545 1 -0.00022679 0.010577 -0.021441 ...<br />
+22 22:16050213:C:T 16050213 C T 0.00635 1 -0.0053945 0.010732 -0.50266 ...<br />
+22 22:16050319:C:T 16050319 C T 0.00115 1 -0.0072811 0.010548 -0.69025 ...<br />
+22 22:16050527:C:A 16050527 C A 0.00045 1 -0.010907 0.011428 -0.95444 ...<br />
+22 22:16050568:C:A 16050568 C A 0.00025 1 -0.0024885 0.011269 -0.22083 ...<br />
+22 22:16050607:G:A 16050607 G A 0.0006 1 0.013246 0.010527 1.2583 ...<br />
+22 22:16050627:G:T 16050627 G T 0.0004 1 -0.00043928 0.01008 -0.04358 ...<br />
+...  </p>
+<p>Here, ellipses indicate that the file extends rightwards and downwards. This listing implies, for example, that the t-statistic for the association between the SNP with name 22:16050075:A:G and the first phenotype is 0.067215. The 8th to 13th column of this same example output file are as follows:</p>
+<p>... pheno1_beta pheno1_se pheno1_t pheno2_beta pheno2_se pheno2_t ...<br />
+... 0.00067749 0.01008 0.067215 0.02078 0.0098946 2.1001 ...<br />
+... -0.00022679 0.010577 -0.021441 -0.009898 0.010385 -0.95313 ...<br />
+... -0.0053945 0.010732 -0.50266 -0.026902 0.010628 -2.5312 ...<br />
+... -0.0072811 0.010548 -0.69025 0.014004 0.010612 1.3196 ...<br />
+... -0.010907 0.011428 -0.95444 -0.00078519 0.011221 -0.069973 ...<br />
+... -0.0024885 0.011269 -0.22083 -0.014114 0.011064 -1.2757 ...<br />
+... 0.013246 0.010527 1.2583 0.01656 0.010336 1.6022 ...<br />
+... -0.00043928 0.01008 -0.04358 -0.032021 0.011422 -2.8034 ...<br />
+...</p>
+<p>This listing shows the results of the association test for the first and second phenotype. Note that subject IDs and family IDs must not be included in this file. Instead, they are inferred from the BGEN file.</p>
+<p><strong>--pvals</strong> By default, the p-values for the association tests are not provided in the output file, as they can be inferred by the beta coefficient and the t-statistic. If this output is desired, the --pvals  parameter may be provided, in which case the output file will include four consecutive columns for each phenotype. The first three are as described above (beta coefficient, standard error and t-statistic), and the fourth is the -log10 p-value of the association.</p>
+<p>If this parameter is provided, then in the example listings shown for the –out parameter above, columns 8 to 11 of the output file will be as follows:</p>
+<p>... pheno1_beta pheno1_se pheno1_t pheno1_p ...<br />
+... 0.00067749 0.01008 0.067215 0.02392 ...<br />
+... -0.00022679 0.010577 -0.021441 0.0074933 ...<br />
+... -0.0053945 0.010732 -0.50266 0.21097 ...<br />
+... -0.0072811 0.010548 -0.69025 0.30975 ...<br />
+... -0.010907 0.011428 -0.95444 0.46866 ...<br />
+... -0.0024885 0.011269 -0.22083 0.083424 ...<br />
+... 0.013246 0.010527 1.2583 0.68125 ...<br />
+... -0.00043928 0.01008 -0.04358 0.015365 ...<br />
+...</p>
+<p>The remaining columns are provided in groups of four for each phenotype.</p>
+<p><strong>--dosage &lt;file></strong> If this flag is provided, the dosage for each SNP/sample pair is written to the provided file.</p>
+<p><strong>--dump_phenotypes</strong>  This option specifies that phenotypes are written to a file. The file name will have the same name as that specified by –out with the suffix .phenos This is useful for understanding the results of ICA and PCA flags, and also missingness filters.</p>
+<h3 id="filtering-options">Filtering options</h3>
+<p><strong>--exc_missing_inds</strong> If this parameter is provided, then all subjects with at least one missing phenotype value will be removed from the analysis.</p>
+<p><strong>--include_pheno &lt;pheno.cov></strong> If this parameter is provided, then only phenotypes listed in the file pheno.cov will be analysed. This file must contain one phenotype name per line, and the phenotype names must match the names of the phenotypes provided in the header line of the phenotype file.</p>
+<p><strong>--range <chr> &lt;start_pos> &lt;end_pos></strong> This option restricts analysis to SNPs falling in the range to (measured in basepairs) on the chromosome <chr>. The index BGI file for the argument <start_pos> to <end_pos> .The BGEN index file file.bgi must exist for this option to work. Also, the chromosome name must match exactly the chromosome name given in the BGEN file (i.e. if the BGEN file names chromosome 1 as 01, then must be 01to specify chromosome 1.)</p>
+<p><strong>--rsid &lt;rsid></strong> If this parameter is provided, then a PHEWAS is performed on the SNP named . The format of the output file is the same as that specified for the parameter --out, except it will only have two lines: the first line will be headers and the second line will be the corresponding values for the PHEWAS against the specified SNP.</p>
+<p><strong>--include_rsids &lt;file></strong> This option allows you to specify a list of RS IDs and then analysis if only run at this markers. The file should contain one RS ID per line.</p>
+<h3 id="runtime-options">Runtime options</h3>
+<p><strong>--thread &lt;n></strong> This option controls the number of threads used by BGENIE will be given to <n>. By default, the number of threads is found by examining the OpenMP environment defaults.</p>
+<p><strong>--chunk &lt;n></strong> BGENIE processes the genetic data in chunks. To specify the size of the chunk (in SNPs), this parameter may be provided, and the size of the chunk will be set to <n>. The value of should be large enough to avoid thread overhead, but small enough to allow RAM usage to not be exceeded. The default value of 256 works for most conditions.</p>
+<h3 id="phenotype-and-genotype-transformations">Phenotype and genotype transformations</h3>
+<p><strong>--scale_phenotypes</strong> By default, beta and se for each marker tested are computed without normalizing phenotypes or genotypes. Phenotypes can be scaled by including this flag. This does not affect p-values or t-statistics.</p>
+<p><strong>--scale_genotypes</strong> By default, beta and se for each marker tested are computed without normalizing phenotypes or genotypes. Genotypes can be scaled by including this flag. This does not affect p-values or t-statistics.</p>
+<p><strong>--pca_only &lt;var></strong> If this option is provided, then the phenotypes will be replaced by the score matrix found by conducting a PCA on the entire set of phenotypes. The score matrix will be restricted to the top principal components that explain the proportion <var> of the variance (i.e.<var>  must be a real number in the interval (0, 1], and the score matrix used in the analysis will explain 100*<var>% of the variance in the phenotypes).</p>
+<p><strong>--pca_plus &lt;var></strong> This parameter is similar to --pca_only, except in addition to the score matrix, analysis will also be performed on all of the untransformed phenotypes. The score matrix will be horizontally concatenated by the phenotype file, and the linear test will be performed between each column of the resulting matrix and all of the SNPs. The identity of the columns in the resulting output file will be clear by the header line.</p>
+<p><strong>--pca_scale_phenotypes</strong> By default, the PCA operations described above do not rescale the phenotypes before they are applied. This makes sense if all of the phenotypes in the phenotype file have identical units. If rescaling is required before application of PCA, then this option should be used.</p>
+<p><strong>--ica_only &lt;k></strong> If this parameter is provided, then the phenotypes will be replaced by an ICA transformation in which the projections of the phenotypes onto the top <k> independent components are considered for analysis. This is done using the fastICA algorithm. <k> must be a positive integer, less than or equal to the number of phenotypes presented.</p>
+<p><strong>--ica_plus &lt;k></strong> This parameter is similar to --ica_only, but like --pca_plus it horizontally concatenates the untransformed phenotypes with the ICA transformation specified above.</p>
+<h3 id="miscellaneous">Miscellaneous</h3>
+<p><strong>--version</strong> Print information about the version of BGENIE used.</p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>
