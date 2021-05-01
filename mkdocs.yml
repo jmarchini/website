@@ -1,0 +1,23 @@
+site_name: jmarchini
+site_url: https://sourcefoundry.org/cinder/
+site_author: Jonathan Marchini
+site_description: "Jonathan Marchini research"
+
+
+theme:
+  name: null
+  custom_dir: cinder
+  colorscheme: github
+  highlightjs: true
+
+nav:
+  - Home: index.md
+  - Publications: pubs.md
+  - Projects: projects.md
+  - Software : software.md
+  - People : people.md
+  - Teaching : teaching.md
+  - News : news.md
+
+extra:
+  collapse_toc: true
